@@ -31,19 +31,27 @@ Training a model using Google’s Teachable Machine is simple and beginner-frien
 
 
 3. **Choose a Project Type**: Select the type of model to train (e.g., Image Project).
+4. ![image](https://github.com/user-attachments/assets/d34fbc1a-de62-4f1d-a784-4a78bca87c21)
 
-4. **Upload or Capture Data**:
+
+5. **Upload or Capture Data**:
    - Upload images from your device.
    - Alternatively, use your webcam to capture photos directly into each class.
+![image](https://github.com/user-attachments/assets/cc39061b-c53c-4d88-a11a-1d78435ae2fd)
 
-5. **Train the Model**:
+6. **Train the Model**:
    - Once you have sufficient data for each class, click the "Train Model" button.
    - Teachable Machine will process the data and train a model based on your inputs.
+![image](https://github.com/user-attachments/assets/848864e6-c83d-46df-becd-cf5ccb83b9b9)
 
-6. **Test the Model**: Test your model by providing new inputs to evaluate its accuracy.
 
-7. **Export the Model**:
-   - Export the trained model (e.g., TensorFlow Lite format) for further use.
+7. **Test the Model**: Test your model by providing new inputs to evaluate its accuracy.
+![image](https://github.com/user-attachments/assets/b67aaaa6-daea-4782-9a7b-a98a3f88c42b)
+
+
+9. **Export the Model**:
+   - Export the trained model (e.g., TensorFlow format) for further use.
+![image](https://github.com/user-attachments/assets/d98ee1f7-5af9-4d31-a944-3247014d6c1a)
 
 ### 4.2 Downloading and Setting Up
 1. **Download the Files**:
