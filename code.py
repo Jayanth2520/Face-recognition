@@ -1,51 +1,56 @@
-from keras.models import load_model  # TensorFlow is required for Keras to work
-import cv2  # Install opencv-python
+import cv2
 import numpy as np
+import tensorflow as tf
 
-# Disable scientific notation for clarity
-np.set_printoptions(suppress=True)
+# Load the Teachable Machine model
+model_path = "model_unquant.tflite"  # Replace with your model's path
+interpreter = tf.lite.Interpreter(model_path=model_path)
+interpreter.allocate_tensors()
 
-# Load the model
-model = load_model("keras_Model.h5", compile=False)
+# Get model input and output details
+input_details = interpreter.get_input_details()
+output_details = interpreter.get_output_details()
 
-# Load the labels
-class_names = open("labels.txt", "r").readlines()
+# Initialize webcam
+cap = cv2.VideoCapture(0)  # Use the default webcam (change 0 if needed)
 
-# CAMERA can be 0 or 1 based on default camera of your computer
-camera = cv2.VideoCapture(0)
+
+def predict(frame):
+    # Preprocess the frame to match the model's input requirements
+    img = cv2.resize(frame, (224, 224))  # Adjust size based on your model
+    img = np.expand_dims(img, axis=0)
+    img = img.astype(np.float32) / 255.0  # Normalize to [0, 1]
+
+    # Run the model
+    interpreter.set_tensor(input_details[0]['index'], img)
+    interpreter.invoke()
+    output_data = interpreter.get_tensor(output_details[0]['index'])
+
+    # Find the label with the highest probability
+    predicted_label = np.argmax(output_data)
+    confidence = np.max(output_data)
+    return predicted_label, confidence
+
 
 while True:
-    # Grab the webcamera's image.
-    ret, image = camera.read()
-
-    # Resize the raw image into (224-height,224-width) pixels
-    image = cv2.resize(image, (224, 224), interpolation=cv2.INTER_AREA)
-
-    # Show the image in a window
-    cv2.imshow("Webcam Image", image)
-
-    # Make the image a numpy array and reshape it to the models input shape.
-    image = np.asarray(image, dtype=np.float32).reshape(1, 224, 224, 3)
-
-    # Normalize the image array
-    image = (image / 127.5) - 1
-
-    # Predicts the model
-    prediction = model.predict(image)
-    index = np.argmax(prediction)
-    class_name = class_names[index]
-    confidence_score = prediction[0][index]
-
-    # Print prediction and confidence score
-    print("Class:", class_name[2:], end="")
-    print("Confidence Score:", str(np.round(confidence_score * 100))[:-2], "%")
-
-    # Listen to the keyboard for presses.
-    keyboard_input = cv2.waitKey(1)
-
-    # 27 is the ASCII for the esc key on your keyboard.
-    if keyboard_input == 27:
+    ret, frame = cap.read()
+    if not ret:
         break
 
-camera.release()
+    # Flip the frame horizontally for a mirror-like view
+    frame = cv2.flip(frame, 1)
+
+    # Predict using the model
+    label, confidence = predict(frame)
+    text = f"Label: {label}, Confidence: {confidence:.2f}"
+    cv2.putText(frame, text, (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+
+    # Display the video feed
+    cv2.imshow("Face Recognition", frame)
+
+    # Press 'q' to quit
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+cap.release()
 cv2.destroyAllWindows()
