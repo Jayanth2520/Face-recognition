@@ -50,7 +50,7 @@ Training a model using Google’s Teachable Machine is simple and beginner-frien
 
 
 9. **Export the Model**:
-   - Export the trained model (e.g., TensorFlow format) for further use.
+   - Export the trained model (e.g., TensorFlow lite  format) for further use.
 ![image](https://github.com/user-attachments/assets/d98ee1f7-5af9-4d31-a944-3247014d6c1a)
 
 ### 4.2 Downloading and Setting Up
